@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Atrapa la Mosca — Recompensas</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="left">
+      <h1>Atrapa la Mosca</h1>
+      <p class="subtitle">Cada mosca atrapada = tokens</p>
+    </div>
+    <div class="right">
+      <button id="connectButton" class="btn">Conectar MetaMask</button>
+      <div id="account" class="account">No conectado</div>
+    </div>
+  </header>
+
+  <main>
+    <section class="game-area" id="gameArea">
+      <!-- Mosca inicial (mantengo el id para compatibilidad con tu código) -->
+      <img id="mosca" class="mosca" src="imagenes/mosca.png" alt="Mosca" />
+    </section>
+
+    <aside class="hud">
+      <div class="score-row">
+        <div>Puntaje:</div>
+        <div id="puntaje" class="puntaje">0</div>
+      </div>
+
+      <div class="controls">
+        <button id="claimButton" class="btn primary" disabled>Cobrar recompensa</button>
+        <div class="hint">Conecta MetaMask y presiona "Cobrar recompensa" para recibir tokens (testnet recomendado).</div>
+      </div>
+
+      <div id="status" class="status"></div>
+    </aside>
+  </main>
+
+  <footer class="footer">
+    <small>Diseñado por vos — integra tu token cuando esté desplegado.</small>
+  </footer>
+
+  <!-- Ethers.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
