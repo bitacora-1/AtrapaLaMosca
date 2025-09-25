@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     nuevaMosca.alt = "Mosca";
     nuevaMosca.classList.add("mosca");
     nuevaMosca.style.width = "100px";
+    nuevaMosca.style.height = "auto";
     nuevaMosca.style.position = "absolute";
     nuevaMosca.style.cursor = "pointer";
     document.body.appendChild(nuevaMosca);
@@ -95,6 +96,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // --- Ajustar la primera mosca ---
+  mosca.style.width = "100px";
+  mosca.style.height = "auto";
+  mosca.style.position = "absolute";
+  mosca.style.cursor = "pointer";
+
   moverMosca(mosca);
   mosca.addEventListener("click", () => {
     score++;
@@ -109,3 +116,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
   tryAutoConnect();
 });
+
