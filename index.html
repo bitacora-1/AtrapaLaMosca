@@ -1,49 +1,41 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Atrapa la Mosca — Recompensas</title>
+
+  <!-- OJO: si tenés una meta Content-Security-Policy que restringe eval/inline, comentalo en desarrollo.
+       Ejemplo problemático: <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' ..."> 
+       Mejor no usar 'unsafe-eval' en producción. -->
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Opcional: carga de iconos/images local en carpeta 'imagenes' -->
 </head>
 <body>
-  <header class="topbar">
-    <div class="left">
-      <h1>Atrapa la Mosca</h1>
-      <p class="subtitle">Cada mosca atrapada = tokens</p>
-    </div>
-    <div class="right">
-      <button id="connectButton" class="btn">Conectar MetaMask</button>
-      <div id="account" class="account">No conectado</div>
+  <header>
+    <h1>Atrapa la Mosca</h1>
+    <div id="wallet-section">
+      <button id="connectBtn">Conectar MetaMask</button>
+      <span id="account" style="margin-left:12px;">No conectado</span>
     </div>
   </header>
 
   <main>
-    <section class="game-area" id="gameArea">
-      <img id="mosca" class="mosca" src="imagenes/mosca.png" alt="Mosca" />
+    <!-- Zona del juego -->
+    <canvas id="gameCanvas" width="800" height="500" style="border:1px solid #ddd"></canvas>
+
+    <section id="game-info">
+      <p id="status">Estado del juego: listo</p>
+      <p>Intenta atrapar la mosca y reclama recompensa (demo).</p>
     </section>
-
-    <aside class="hud">
-      <div class="score-row">
-        <div>Puntaje:</div>
-        <div id="puntaje" class="puntaje">0</div>
-      </div>
-
-      <div class="controls">
-        <button id="claimButton" class="btn primary" disabled>Cobrar recompensa</button>
-        <div class="hint">Conecta MetaMask y presiona "Cobrar recompensa" para recibir tokens (testnet recomendado).</div>
-      </div>
-
-      <div id="status" class="status"></div>
-    </aside>
   </main>
 
-  <footer class="footer">
-    <small>Diseñado por vos — integra tu token cuando esté desplegado.</small>
+  <footer>
+    <small>Demo — Asegurate de no compartir claves privadas.</small>
   </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.min.js"></script>
+  <!-- Carga del script al final para evitar problemas con elementos no cargados -->
+  <script src="script.js"></script>
 </body>
 </html>
-
-
