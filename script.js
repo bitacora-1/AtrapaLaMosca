@@ -37,6 +37,11 @@ function moverMoscaEl(el) {
   const y = Math.random() * (rect.height - h);
   const rotacion = Math.random() * 360;
 
+  // Guardamos la posición en dataset para referencia futura
+  el.dataset.x = x;
+  el.dataset.y = y;
+  el.dataset.rot = rotacion;
+
   el.style.left = `${x}px`;
   el.style.top = `${y}px`;
   el.style.transform = `rotate(${rotacion}deg) scale(1)`;
@@ -60,30 +65,28 @@ function agregarMosca() {
   nuevaMosca.style.position = "absolute";
   nuevaMosca.style.cursor = "pointer";
 
-  nuevaMosca.addEventListener("click", (ev) => {
-    ev.stopPropagation();
-    nuevaMosca.style.transform = nuevaMosca.style.transform + " scale(1.1)";
-    setTimeout(() => moverMoscaEl(nuevaMosca), 70);
-    agregarMosca();
-    aumentarPuntaje();
-  });
-
+  setupMoscaClick(nuevaMosca);
   gameArea.appendChild(nuevaMosca);
   moverMoscaEl(nuevaMosca);
   return nuevaMosca;
 }
 
-// Mosca inicial desde DOM
+// Configura evento click para cada mosca
+function setupMoscaClick(mosca) {
+  mosca.addEventListener("click", (ev) => {
+    ev.stopPropagation();
+    mosca.style.transform = mosca.style.transform + " scale(1.1)";
+    setTimeout(() => moverMoscaEl(mosca), 70);
+    agregarMosca(); // agregar nueva mosca
+    aumentarPuntaje();
+  });
+}
+
+// Inicializamos mosca del DOM
 const moscaInit = document.getElementById("mosca");
 if (moscaInit) {
   moscaInit.classList.add("mosca");
-  moscaInit.addEventListener("click", (ev) => {
-    ev.stopPropagation();
-    moscaInit.style.transform = moscaInit.style.transform + " scale(1.1)";
-    setTimeout(() => moverMoscaEl(moscaInit), 70);
-    agregarMosca();
-    aumentarPuntaje();
-  });
+  setupMoscaClick(moscaInit);
   moverMoscaEl(moscaInit);
 } else {
   agregarMosca();
