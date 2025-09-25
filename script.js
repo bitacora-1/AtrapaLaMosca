@@ -1,105 +1,41 @@
-/* ---------------------------------------------------
-   Juego "Atrapa la Mosca" (versión estable)
-   Moscas se mueven solo al hacer click
-   --------------------------------------------------- */
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Atrapa la Mosca — Recompensas</title>
 
-let provider, signer, contract;
+  <!-- OJO: si tenés una meta Content-Security-Policy que restringe eval/inline, comentalo en desarrollo.
+       Ejemplo problemático: <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' ..."> 
+       Mejor no usar 'unsafe-eval' en producción. -->
+  <link rel="stylesheet" href="style.css" />
 
-// Elementos del DOM
-const connectButton = document.getElementById("connectButton");
-const accountEl = document.getElementById("account");
-const claimButton = document.getElementById("claimButton");
-const statusEl = document.getElementById("status");
-const puntajeEl = document.getElementById("puntaje");
-const gameArea = document.getElementById("gameArea");
+  <!-- Opcional: carga de iconos/images local en carpeta 'imagenes' -->
+</head>
+<body>
+  <header>
+    <h1>Atrapa la Mosca</h1>
+    <div id="wallet-section">
+      <button id="connectBtn">Conectar MetaMask</button>
+      <span id="account" style="margin-left:12px;">No conectado</span>
+    </div>
+  </header>
 
-let puntaje = 0;
-puntajeEl.textContent = puntaje;
+  <main>
+    <!-- Zona del juego -->
+    <canvas id="gameCanvas" width="800" height="500" style="border:1px solid #ddd"></canvas>
 
-// Cursor personalizado
-const cursor = document.createElement("div");
-cursor.classList.add("cursor");
-document.body.appendChild(cursor);
-document.addEventListener("mousemove", (e) => {
-  cursor.style.left = `${e.clientX}px`;
-  cursor.style.top = `${e.clientY}px`;
-});
+    <section id="game-info">
+      <p id="status">Estado del juego: listo</p>
+      <p>Intenta atrapar la mosca y reclama recompensa (demo).</p>
+    </section>
+  </main>
 
-// Mover mosca dentro del área de juego
-function moverMoscaEl(el) {
-  const w = el.clientWidth || 100;
-  const h = el.clientHeight || 100;
-  const rect = gameArea.getBoundingClientRect();
-  const x = Math.random() * (rect.width - w);
-  const y = Math.random() * (rect.height - h);
-  const rotacion = Math.random() * 360;
+  <footer>
+    <small>Demo — Asegurate de no compartir claves privadas.</small>
+  </footer>
 
-  el.style.left = `${x}px`;
-  el.style.top = `${y}px`;
-  el.style.transform = `rotate(${rotacion}deg) scale(1)`;
-}
-
-// Aumentar puntaje
-function aumentarPuntaje() {
-  puntaje++;
-  puntajeEl.textContent = puntaje;
-}
-
-// Crear nueva mosca
-function agregarMosca() {
-  const nuevaMosca = document.createElement("img");
-  nuevaMosca.src = "imagenes/mosca.png";
-  nuevaMosca.alt = "Mosca";
-  nuevaMosca.classList.add("mosca");
-  nuevaMosca.style.width = "100px";
-  nuevaMosca.style.height = "auto";
-  nuevaMosca.style.position = "absolute";
-  nuevaMosca.style.cursor = "pointer";
-
-  nuevaMosca.addEventListener("click", (ev) => {
-    ev.stopPropagation();
-    moverMoscaEl(nuevaMosca);
-    agregarMosca();
-    aumentarPuntaje();
-  });
-
-  gameArea.appendChild(nuevaMosca);
-  moverMoscaEl(nuevaMosca);
-  return nuevaMosca;
-}
-
-// Mosca inicial
-const moscaInit = document.getElementById("mosca");
-if (moscaInit) {
-  moscaInit.classList.add("mosca");
-  moscaInit.addEventListener("click", (ev) => {
-    ev.stopPropagation();
-    moverMoscaEl(moscaInit);
-    agregarMosca();
-    aumentarPuntaje();
-  });
-  moverMoscaEl(moscaInit);
-} else {
-  agregarMosca();
-}
-
-/* ---------------- MetaMask (todavía básico) ---------------- */
-async function connectWallet() {
-  try {
-    if (!window.ethereum) {
-      alert("No se detectó MetaMask. Instálala y vuelve a intentarlo.");
-      return;
-    }
-    provider = new ethers.providers.Web3Provider(window.ethereum, "any");
-    await provider.send("eth_requestAccounts", []);
-    signer = provider.getSigner();
-    const account = await signer.getAddress();
-    accountEl.textContent = account;
-    statusEl.textContent = "Conectado a MetaMask";
-  } catch (err) {
-    console.error(err);
-    statusEl.textContent = "Error conectando MetaMask";
-  }
-}
-
-connectButton.addEventListener("click", connectWallet);
+  <!-- Carga del script al final para evitar problemas con elementos no cargados -->
+  <script src="script.js"></script>
+</body>
+</html>
