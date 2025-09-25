@@ -27,7 +27,8 @@ document.addEventListener("mousemove", (e) => {
   cursor.style.top = `${e.clientY}px`;
 });
 
-// Función para mover una mosca dentro de gameArea
+/* ---------------- Funciones de juego ---------------- */
+// Mueve solo la mosca que se hace click dentro de gameArea
 function moverMoscaEl(el) {
   const w = el.clientWidth || 100;
   const h = el.clientHeight || 100;
@@ -37,7 +38,6 @@ function moverMoscaEl(el) {
   const y = Math.random() * (rect.height - h);
   const rotacion = Math.random() * 360;
 
-  // Guardamos la posición en dataset para referencia futura
   el.dataset.x = x;
   el.dataset.y = y;
   el.dataset.rot = rotacion;
@@ -47,14 +47,22 @@ function moverMoscaEl(el) {
   el.style.transform = `rotate(${rotacion}deg) scale(1)`;
 }
 
-// Aumenta puntaje y actualiza UI
 function aumentarPuntaje() {
   puntaje++;
   puntajeEl.textContent = puntaje;
   actualizarEstadoClaim();
 }
 
-// Crear una nueva mosca
+function setupMoscaClick(mosca) {
+  mosca.addEventListener("click", (ev) => {
+    ev.stopPropagation();
+    mosca.style.transform = mosca.style.transform + " scale(1.1)";
+    setTimeout(() => moverMoscaEl(mosca), 70);
+    agregarMosca();
+    aumentarPuntaje();
+  });
+}
+
 function agregarMosca() {
   const nuevaMosca = document.createElement("img");
   nuevaMosca.src = "imagenes/mosca.png";
@@ -71,17 +79,6 @@ function agregarMosca() {
   return nuevaMosca;
 }
 
-// Configura evento click para cada mosca
-function setupMoscaClick(mosca) {
-  mosca.addEventListener("click", (ev) => {
-    ev.stopPropagation();
-    mosca.style.transform = mosca.style.transform + " scale(1.1)";
-    setTimeout(() => moverMoscaEl(mosca), 70);
-    agregarMosca(); // agregar nueva mosca
-    aumentarPuntaje();
-  });
-}
-
 // Inicializamos mosca del DOM
 const moscaInit = document.getElementById("mosca");
 if (moscaInit) {
@@ -92,7 +89,7 @@ if (moscaInit) {
   agregarMosca();
 }
 
-// ---------------- Integración MetaMask / ethers.js ----------------
+/* ---------------- Funciones MetaMask / ethers.js ---------------- */
 function actualizarEstadoClaim() {
   claimButton.disabled = !(provider && signer && puntaje > 0 && contract);
 }
@@ -135,7 +132,7 @@ async function cobrarRecompensa() {
     return;
   }
 
-  const decimals = 18; 
+  const decimals = 18;
   const amount = ethers.BigNumber.from(puntaje.toString()).mul(ethers.BigNumber.from(10).pow(decimals));
 
   try {
@@ -155,11 +152,11 @@ async function cobrarRecompensa() {
   }
 }
 
-// ---------------- Eventos botones ----------------
+/* ---------------- Eventos botones ---------------- */
 connectButton.addEventListener("click", connectWallet);
 claimButton.addEventListener("click", cobrarRecompensa);
 
-// ---------------- Manejo cambios de cuenta / red ----------------
+/* ---------------- Manejo cambios de cuenta / red ---------------- */
 if (window.ethereum) {
   window.ethereum.on("accountsChanged", (accounts) => {
     if (accounts.length === 0) {
