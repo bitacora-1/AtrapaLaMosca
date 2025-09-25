@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // --- Referencias al DOM ---
+  // --- Elementos del DOM ---
   const connectBtn = document.getElementById('connectBtn');
   const accountSpan = document.getElementById('account');
   const statusP = document.getElementById('status');
+  const scoreSpan = document.getElementById('score');
   const canvas = document.getElementById('gameCanvas');
   const ctx = canvas.getContext('2d');
 
@@ -15,17 +16,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function connectWallet() {
+    if (!isMetaMaskInstalled()) {
+      alert('MetaMask no está instalada. Instalala y recargá la página.');
+      return;
+    }
     try {
-      if (!isMetaMaskInstalled()) {
-        alert('MetaMask no está instalada. Instalala y recargá la página.');
-        return;
-      }
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
       handleAccountsChanged(accounts);
       setupListeners();
     } catch (err) {
       console.error('Error al conectar:', err);
-      alert('Error al conectar con MetaMask. Mirá la consola.');
+      alert('Error al conectar con MetaMask. Revisá la consola.');
     }
   }
 
@@ -38,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
       currentAccount = accounts[0];
       accountSpan.textContent = `${currentAccount.substring(0, 6)}...${currentAccount.slice(-4)}`;
       statusP.textContent = 'Estado del juego: conectado';
-      console.log('Cuenta conectada:', currentAccount);
     }
   }
 
@@ -71,17 +71,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#f7f7f7';
+    ctx.fillStyle = '#fff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // mosca
+    // Mosca
     ctx.beginPath();
     ctx.arc(fly.x, fly.y, fly.r, 0, Math.PI * 2);
     ctx.fillStyle = '#222';
     ctx.fill();
     ctx.closePath();
 
-    // score
+    // Score
     ctx.font = '18px sans-serif';
     ctx.fillStyle = '#333';
     ctx.fillText(`Score: ${score}`, 12, 24);
@@ -97,15 +97,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
     const dist = Math.hypot(mx - fly.x, my - fly.y);
+
     if (dist <= fly.r) {
       score++;
+      scoreSpan.textContent = score;
       statusP.textContent = `¡Mosca atrapada! Score: ${score}`;
       randomizeFly();
 
       if (currentAccount) {
-        console.log(`Podrías mandar recompensa a ${currentAccount}`);
+        console.log(`Aquí podrías enviar recompensa a ${currentAccount}`);
       }
     }
+
     draw();
   });
 
