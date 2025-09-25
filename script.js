@@ -2,10 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Elementos del DOM ---
   const connectBtn = document.getElementById('connectBtn');
   const accountSpan = document.getElementById('account');
-  const statusP = document.getElementById('status');
   const scoreSpan = document.getElementById('score');
-  const canvas = document.getElementById('gameCanvas');
-  const ctx = canvas.getContext('2d');
+  const mosca = document.getElementById('mosca');
 
   let currentAccount = null;
   let score = 0;
@@ -34,11 +32,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!accounts || accounts.length === 0) {
       accountSpan.textContent = 'No conectado';
       currentAccount = null;
-      statusP.textContent = 'Estado del juego: desconectado';
     } else {
       currentAccount = accounts[0];
-      accountSpan.textContent = `${currentAccount.substring(0, 6)}...${currentAccount.slice(-4)}`;
-      statusP.textContent = 'Estado del juego: conectado';
+      accountSpan.textContent = `${currentAccount.substring(0,6)}...${currentAccount.slice(-4)}`;
     }
   }
 
@@ -47,7 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.ethereum.on('accountsChanged', handleAccountsChanged);
     window.ethereum.on('chainChanged', (chainId) => {
       console.log('Red cambiada:', chainId);
-      statusP.textContent = `Red cambiada: ${chainId}`;
     });
   }
 
@@ -67,61 +62,50 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- Juego: Atrapa la Mosca ---
-  const fly = { x: 100, y: 100, r: 18 };
-
-  // --- Cargar imagen de la mosca ---
-  const moscaImg = new Image();
-  moscaImg.src = 'imagenes/mosca.png';
-
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Dibujar mosca como imagen
-    ctx.drawImage(
-      moscaImg,
-      fly.x - fly.r, // centrar la imagen
-      fly.y - fly.r,
-      fly.r * 2,     // ancho
-      fly.r * 2      // alto
-    );
-
-    // Score
-    ctx.font = '18px sans-serif';
-    ctx.fillStyle = '#333';
-    ctx.fillText(`Score: ${score}`, 12, 24);
+  function moverMosca(moscaElem) {
+    const x = Math.random() * (window.innerWidth - 100);
+    const y = Math.random() * (window.innerHeight - 100);
+    const rotacion = Math.random() * 360;
+    moscaElem.style.left = `${x}px`;
+    moscaElem.style.top = `${y}px`;
+    moscaElem.style.transform = `rotate(${rotacion}deg) scale(1)`;
   }
 
-  function randomizeFly() {
-    fly.x = Math.random() * (canvas.width - 40) + 20;
-    fly.y = Math.random() * (canvas.height - 40) + 20;
-  }
+  function agregarMosca() {
+    const nuevaMosca = document.createElement("img");
+    nuevaMosca.src = "imagenes/mosca.png";
+    nuevaMosca.alt = "Mosca";
+    nuevaMosca.classList.add("mosca");
+    nuevaMosca.style.width = "100px";
+    nuevaMosca.style.position = "absolute";
+    nuevaMosca.style.cursor = "pointer";
+    document.body.appendChild(nuevaMosca);
 
-  canvas.addEventListener('click', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const mx = e.clientX - rect.left;
-    const my = e.clientY - rect.top;
-    const dist = Math.hypot(mx - fly.x, my - fly.y);
+    moverMosca(nuevaMosca);
 
-    if (dist <= fly.r) {
+    nuevaMosca.addEventListener("click", () => {
       score++;
       scoreSpan.textContent = score;
-      statusP.textContent = `¡Mosca atrapada! Score: ${score}`;
-      randomizeFly();
+      moverMosca(nuevaMosca);
+      agregarMosca();
 
       if (currentAccount) {
-        console.log(`Aquí podrías enviar recompensa a ${currentAccount}`);
+        console.log(`Podrías mandar recompensa a ${currentAccount}`);
       }
-    }
+    });
+  }
 
-    draw();
+  moverMosca(mosca);
+  mosca.addEventListener("click", () => {
+    score++;
+    scoreSpan.textContent = score;
+    moverMosca(mosca);
+    agregarMosca();
+
+    if (currentAccount) {
+      console.log(`Podrías mandar recompensa a ${currentAccount}`);
+    }
   });
 
-  // Iniciar juego
-  moscaImg.onload = () => {
-    randomizeFly();
-    draw();
-  };
   tryAutoConnect();
 });
