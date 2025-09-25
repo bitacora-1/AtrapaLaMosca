@@ -69,17 +69,23 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Juego: Atrapa la Mosca ---
   const fly = { x: 100, y: 100, r: 18 };
 
+  // --- Cargar imagen de la mosca ---
+  const moscaImg = new Image();
+  moscaImg.src = 'imagenes/mosca.png';
+
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = '#fff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Mosca
-    ctx.beginPath();
-    ctx.arc(fly.x, fly.y, fly.r, 0, Math.PI * 2);
-    ctx.fillStyle = '#222';
-    ctx.fill();
-    ctx.closePath();
+    // Dibujar mosca como imagen
+    ctx.drawImage(
+      moscaImg,
+      fly.x - fly.r, // centrar la imagen
+      fly.y - fly.r,
+      fly.r * 2,     // ancho
+      fly.r * 2      // alto
+    );
 
     // Score
     ctx.font = '18px sans-serif';
@@ -113,7 +119,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Iniciar juego
-  randomizeFly();
-  draw();
+  moscaImg.onload = () => {
+    randomizeFly();
+    draw();
+  };
   tryAutoConnect();
 });
