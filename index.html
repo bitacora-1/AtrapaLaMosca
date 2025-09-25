@@ -1,35 +1,24 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Atrapa la Mosca — Recompensas</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atrapa la Mosca</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
     <h1>Atrapa la Mosca</h1>
     <div id="wallet-section">
       <button id="connectBtn">Conectar MetaMask</button>
-      <span id="account" style="margin-left:12px;">No conectado</span>
+      <span id="account">No conectado</span>
     </div>
+    <p>Score: <span id="score">0</span></p>
   </header>
 
-  <main>
-    <canvas id="gameCanvas" width="800" height="500" style="border:1px solid #ddd"></canvas>
+  <!-- Mosca inicial -->
+  <img id="mosca" src="imagenes/mosca.png" alt="Mosca">
 
-    <section id="game-info">
-      <p id="status">Estado del juego: listo</p>
-      <p>Score: <span id="score">0</span></p>
-      <p>Intenta atrapar la mosca y reclama recompensa (demo).</p>
-    </section>
-  </main>
-
-  <footer>
-    <small>Demo — No compartas claves privadas.</small>
-  </footer>
-
-  <!-- Script al final para asegurar que el DOM esté cargado -->
   <script src="script.js"></script>
 </body>
 </html>
